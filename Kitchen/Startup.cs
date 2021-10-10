@@ -1,9 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
@@ -52,7 +54,37 @@ namespace Kitchen
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapControllers();
+                endpoints.MapPost("/", async context =>
+                {
+                    if (!context.Request.HasJsonContentType())
+                    {
+                        context.Response.StatusCode = (int)HttpStatusCode.UnsupportedMediaType;
+                        return;
+                    }
+                    //var weather = await context.Request.ReadFromJsonAsync<WeatherForecast>();
+                    
+                    //await context.Response.WriteAsync("Got order!");
+                    Console.WriteLine("got order");
+                    //await UpdateDatabaseAsync(weather);
+
+                    context.Response.StatusCode = (int) HttpStatusCode.Accepted;
+                });
+                
+                endpoints.MapPost("/order", async context =>
+                {
+                    if (!context.Request.HasJsonContentType())
+                    {
+                        context.Response.StatusCode = (int)HttpStatusCode.UnsupportedMediaType;
+                        return;
+                    }
+                    //var weather = await context.Request.ReadFromJsonAsync<WeatherForecast>();
+                    
+                    //await context.Response.WriteAsync("Got order!");
+                    Console.WriteLine("got order!");
+                    //await UpdateDatabaseAsync(weather);
+
+                    context.Response.StatusCode = (int) HttpStatusCode.Accepted;
+                });
             });
         }
     }

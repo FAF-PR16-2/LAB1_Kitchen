@@ -1,0 +1,13 @@
+services:
+
+  kitchen:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      -   "81:81"
+    networks:
+      -   restaurant
+
+networks:
+  restaurant:
