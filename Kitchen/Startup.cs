@@ -39,36 +39,27 @@ namespace Kitchen
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-                app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Kitchen v1"));
-            }
-
-            app.UseHttpsRedirection();
-
             app.UseRouting();
 
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapPost("/", async context =>
-                {
-                    if (!context.Request.HasJsonContentType())
-                    {
-                        context.Response.StatusCode = (int)HttpStatusCode.UnsupportedMediaType;
-                        return;
-                    }
-                    //var weather = await context.Request.ReadFromJsonAsync<WeatherForecast>();
-                    
-                    //await context.Response.WriteAsync("Got order!");
-                    Console.WriteLine("got order");
-                    //await UpdateDatabaseAsync(weather);
-
-                    context.Response.StatusCode = (int) HttpStatusCode.Accepted;
-                });
+                // endpoints.MapPost("/", async context =>
+                // {
+                //     if (!context.Request.HasJsonContentType())
+                //     {
+                //         context.Response.StatusCode = (int)HttpStatusCode.UnsupportedMediaType;
+                //         return;
+                //     }
+                //     //var weather = await context.Request.ReadFromJsonAsync<WeatherForecast>();
+                //     
+                //     //await context.Response.WriteAsync("Got order!");
+                //     Console.WriteLine("got order");
+                //     //await UpdateDatabaseAsync(weather);
+                //
+                //     context.Response.StatusCode = (int) HttpStatusCode.Accepted;
+                // });
                 
                 endpoints.MapPost("/order", async context =>
                 {
@@ -77,11 +68,10 @@ namespace Kitchen
                         context.Response.StatusCode = (int)HttpStatusCode.UnsupportedMediaType;
                         return;
                     }
-                    //var weather = await context.Request.ReadFromJsonAsync<WeatherForecast>();
-                    
-                    //await context.Response.WriteAsync("Got order!");
+
                     Console.WriteLine("got order!");
-                    //await UpdateDatabaseAsync(weather);
+                    var orderData = await context.Request.ReadFromJsonAsync<OrderData>();
+                    Console.WriteLine(orderData?.ToString());
 
                     context.Response.StatusCode = (int) HttpStatusCode.Accepted;
                 });
