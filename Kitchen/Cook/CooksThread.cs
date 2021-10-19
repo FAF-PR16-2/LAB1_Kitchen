@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Threading;
+using Kitchen.CookingApparatus;
 
 namespace Kitchen
 {
@@ -19,6 +20,12 @@ namespace Kitchen
 
         private long _currentPreparingTime;
         private long _finishPreparingTime;
+
+        private bool _isWaitingForOven;
+        private bool _isWaitingForStove;
+
+        private Oven _currentOven;
+        private Stove _currentStove;
         
         public CooksThread(Cook masterCook)
         {
@@ -28,6 +35,8 @@ namespace Kitchen
 
         public void Start()
         {
+            _isWaitingForOven = false;
+            _isWaitingForStove = false;
             Status = CookThreadStatus.Free;
         }
 
@@ -53,6 +62,7 @@ namespace Kitchen
             Status = CookThreadStatus.Busy;
 
             _currentOrder = itemFromOrderData;
+
             StartPreparingOrder(finishDeltaTime);
 
             //todo use oven or whatever here
@@ -60,14 +70,26 @@ namespace Kitchen
 
         private void StartPreparingOrder(long finishDeltaTime)
         {
-            _currentPreparingTime = 0;
+            switch (_cook.ItemsBuilder.GetItemDataByItemId(_currentOrder.item_id).cooking_apparatus)
+            {
+                case "oven":
+                    _isWaitingForOven = true;
+                    break;
+                case "stove":
+                    _isWaitingForStove = true;
+                    break;
+            }
+            
+            if (!_isWaitingForOven && !_isWaitingForStove)
+                _currentPreparingTime = 0;
             _finishPreparingTime = finishDeltaTime * Configuration.TimeUnit;
         }
 
         private void ContinuePreparingOrder(long deltaTime)
         {
             if (_currentPreparingTime == -1)
-                return;
+                if (!TryUseCookingApparatus())
+                    return;
             
             _currentPreparingTime += deltaTime;
 
@@ -77,12 +99,56 @@ namespace Kitchen
             }
         }
 
+        private bool TryUseCookingApparatus()
+        {
+            if (_isWaitingForOven)
+            {
+                foreach (var oven in KitchenManager.Instance().KitchenSetup.Ovens)
+                {
+                    if (oven.UseOven())
+                    {
+                        _currentPreparingTime = 0;
+                        _currentOven = oven;
+                        return true;
+                    }
+                }
+            }
+            else if (_isWaitingForStove)
+            {
+                foreach (var stove in KitchenManager.Instance().KitchenSetup.Stoves)
+                {
+                    if (stove.UseStove())
+                    {
+                        _currentPreparingTime = 0;
+                        _currentStove = stove;
+                        return true;
+                    }
+                }
+            }
+
+            return false;
+        }
+
         private void SendOrder()
         {
+            Console.WriteLine("item is done");
             KitchenManager.Instance().FinishItemFromOrder(_currentOrder);
 
-            Console.WriteLine("item is done");
+            _isWaitingForOven = false;
+            _isWaitingForStove = false;
 
+            if (_currentOven != null)
+            {
+                _currentOven.StopUsingOven();
+                _currentOven = null;
+            }
+
+            if (_currentStove != null)
+            {
+                _currentStove.StopUsingStove();
+                _currentStove = null;
+            }
+            
             Status = CookThreadStatus.Free;
             _currentPreparingTime = -1;
         }

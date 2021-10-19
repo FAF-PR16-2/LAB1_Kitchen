@@ -66,7 +66,7 @@ namespace Kitchen
 
         public List<ItemFromOrderData> GetListOfItemsFromOrderData()
         {
-            return _sortedListItemsToPrepare;
+            return new List<ItemFromOrderData>(_sortedListItemsToPrepare);
         }
 
         public bool RemoveItemFromListOfItemsFromOrderData(ItemFromOrderData itemFromOrderData)
@@ -75,7 +75,10 @@ namespace Kitchen
             if (_sortedListItemsToPrepare.Contains(itemFromOrderData))
                 _sortedListItemsToPrepare.Remove(itemFromOrderData);
             else
+            {
+                _mutexForRemoving.ReleaseMutex();
                 return false;
+            }
             
             _mutexForRemoving.ReleaseMutex();
             return true;
@@ -115,11 +118,13 @@ namespace Kitchen
                 }
             }
             
+            Console.WriteLine("got here somehow");
+            _mutexForFinishing.ReleaseMutex();
         }
 
         private void SendRequestWithFinishedOrder(DistributionData distributionData)
         {
-            
+            RequestsSender.SendOrderRequest(distributionData);
             Console.WriteLine("order with id = " + distributionData.order_id + " was sent");
             // todo
         }
@@ -130,8 +135,6 @@ namespace Kitchen
             {
                 _sortedListItemsToPrepare.Add(item);
             }
-            
-            //todo sort list
             
             _sortedListItemsToPrepare = 
                 _sortedListItemsToPrepare.OrderByDescending(item => item.priority)

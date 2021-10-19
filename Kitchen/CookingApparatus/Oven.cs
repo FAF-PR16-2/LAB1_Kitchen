@@ -25,7 +25,10 @@ namespace Kitchen.CookingApparatus
         {
             _mutex.WaitOne();
             if (Status == OvenStatus.Busy)
+            {
+                _mutex.ReleaseMutex();
                 return false;
+            }
             Status = OvenStatus.Busy;
             _mutex.ReleaseMutex();
             return true;

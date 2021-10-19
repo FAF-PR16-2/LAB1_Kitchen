@@ -15,8 +15,8 @@ namespace Kitchen
         
         private int _rank;
         private int _proficiency;
-        private ItemsBuilder _itemsBuilder;
-        private ItemData[] _possibleItemsData;
+        public ItemsBuilder ItemsBuilder;
+        
 
         public readonly string Name;
         public readonly string CatchPhrase;
@@ -35,8 +35,8 @@ namespace Kitchen
             _proficiency = proficiency;
             Name = name;
             CatchPhrase = catchPhrase;
-            _itemsBuilder = new ItemsBuilder();
-            _possibleItemsData = _itemsBuilder.GetItems();
+            ItemsBuilder = new ItemsBuilder();
+            ItemsBuilder.GetItems();
 
             SetupCookThreads();
             
@@ -89,7 +89,7 @@ namespace Kitchen
             {
                 if (item.complexity <= _rank)
                 {
-                    var itemData = _itemsBuilder.GetItemDataByItemId(item.item_id).cooking_apparatus; 
+                    var itemData = ItemsBuilder.GetItemDataByItemId(item.item_id).cooking_apparatus; 
                     if (itemData != null)
                     {
                         switch (itemData)
@@ -133,7 +133,7 @@ namespace Kitchen
                     {
                         if (item.complexity <= _rank)
                         {
-                            var itemData = _itemsBuilder.GetItemDataByItemId(item.item_id).cooking_apparatus;
+                            var itemData = ItemsBuilder.GetItemDataByItemId(item.item_id).cooking_apparatus;
                             if (itemData == "oven")
                             {
                                 itemToReturn = item;
@@ -148,7 +148,7 @@ namespace Kitchen
                     {
                         if (item.complexity <= _rank)
                         {
-                            var itemData = _itemsBuilder.GetItemDataByItemId(item.item_id).cooking_apparatus;
+                            var itemData = ItemsBuilder.GetItemDataByItemId(item.item_id).cooking_apparatus;
                             if (itemData == "stove")
                                 itemToReturn = item;
                         }
@@ -162,10 +162,13 @@ namespace Kitchen
             bool check =  KitchenManager.Instance().RemoveItemFromListOfItemsFromOrderData(itemToReturn);
 
             if (!check)
+            {
+                //Console.WriteLine("check was failed");
                 return GetOrder();
+            }
             
             itemToReturn.cook_id = Id;
-            return (itemToReturn, _itemsBuilder.GetItemDataByItemId(itemToReturn.item_id).preparation_time);
+            return (itemToReturn, ItemsBuilder.GetItemDataByItemId(itemToReturn.item_id).preparation_time);
         } 
 
 

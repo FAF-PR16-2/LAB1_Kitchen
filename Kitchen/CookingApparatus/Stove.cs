@@ -20,17 +20,20 @@ namespace Kitchen.CookingApparatus
             _mutex = new Mutex();
         }
 
-        public bool UseOven()
+        public bool UseStove()
         {
             _mutex.WaitOne();
             if (Status == StoveStatus.Busy)
+            {
+                _mutex.ReleaseMutex();
                 return false;
+            }
             Status = StoveStatus.Busy;
             _mutex.ReleaseMutex();
             return true;
         }
 
-        public void StopUsingOven()
+        public void StopUsingStove()
         {
             Status = StoveStatus.Free;
         }
