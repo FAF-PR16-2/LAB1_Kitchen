@@ -1,7 +1,11 @@
-﻿namespace Kitchen.CookingApparatus
+﻿using System.Threading;
+
+namespace Kitchen.CookingApparatus
 {
     public class Oven
     {
+        private Mutex _mutex; 
+        
         public enum OvenStatus
         {
             Free,
@@ -12,11 +16,24 @@
 
         public Oven()
         {
+            _mutex = new Mutex();
             ChangeStatusToFree();
+            
         }
 
-        public void UseOven()
+        public bool UseOven()
         {
+            _mutex.WaitOne();
+            if (Status == OvenStatus.Busy)
+                return false;
+            Status = OvenStatus.Busy;
+            _mutex.ReleaseMutex();
+            return true;
+        }
+
+        public void StopUsingOven()
+        {
+            Status = OvenStatus.Free;
             
         }
 

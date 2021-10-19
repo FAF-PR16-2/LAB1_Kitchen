@@ -15,7 +15,7 @@ namespace Kitchen
         public CookThreadStatus Status;
 
         private Cook _cook;
-        private DistributionData _currentOrder;
+        private ItemFromOrderData _currentOrder;
 
         private long _currentPreparingTime;
         private long _finishPreparingTime;
@@ -35,9 +35,9 @@ namespace Kitchen
         {
             if (Status == CookThreadStatus.Free)
             {
-                var (distributionData, finishDeltaTime) = _cook.GetOrder();
+                var (itemFromOrderData, finishDeltaTime) = _cook.GetOrder();
                 
-                GetOrder(distributionData, finishDeltaTime);
+                GetOrder(itemFromOrderData, finishDeltaTime);
             }
             else
             {
@@ -45,23 +45,23 @@ namespace Kitchen
             }
         }
 
-        private void GetOrder(DistributionData distributionData, long finishDeltaTime)
+        private void GetOrder(ItemFromOrderData itemFromOrderData, long finishDeltaTime)
         {
             if (finishDeltaTime == -1)
                 return;
 
             Status = CookThreadStatus.Busy;
 
-            _currentOrder = distributionData;
+            _currentOrder = itemFromOrderData;
             StartPreparingOrder(finishDeltaTime);
 
-            //todo maybe i forgot something here
+            //todo use oven or whatever here
         }
 
         private void StartPreparingOrder(long finishDeltaTime)
         {
             _currentPreparingTime = 0;
-            _finishPreparingTime = finishDeltaTime;
+            _finishPreparingTime = finishDeltaTime * Configuration.TimeUnit;
         }
 
         private void ContinuePreparingOrder(long deltaTime)
@@ -79,9 +79,9 @@ namespace Kitchen
 
         private void SendOrder()
         {
-            //todo
+            KitchenManager.Instance().FinishItemFromOrder(_currentOrder);
 
-            Console.WriteLine("order is done");
+            Console.WriteLine("item is done");
 
             Status = CookThreadStatus.Free;
             _currentPreparingTime = -1;

@@ -7,9 +7,7 @@ namespace Kitchen
     {
         public Stove[] Stoves;
         public Oven[] Ovens;
-
-        public Cook[] Cooks;
-
-        public List<OrderData> Orders;
+        
+        //public Cook[] Cooks;
     }
 }

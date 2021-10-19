@@ -71,7 +71,10 @@ namespace Kitchen
 
                     Console.WriteLine("got order!");
                     var orderData = await context.Request.ReadFromJsonAsync<OrderData>();
-                    Console.WriteLine(orderData?.ToString());
+                    
+                    KitchenManager.Instance().ReceiveOrder(orderData);
+                    
+                    //Console.WriteLine(orderData?.ToString());
 
                     context.Response.StatusCode = (int) HttpStatusCode.Accepted;
                 });

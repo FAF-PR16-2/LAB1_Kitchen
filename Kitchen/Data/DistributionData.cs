@@ -11,7 +11,7 @@ namespace Kitchen
         public int[] items { get; set; }
         public int priority { get; set; }
         public int max_wait { get; set; }
-        public int pick_up_time { get; set; }
+        public long pick_up_time { get; set; }
         public int cooking_time { get; set; }
         public Dictionary<string, int>[] cooking_details { get; set; }
 
