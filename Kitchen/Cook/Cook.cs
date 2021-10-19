@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
+using System.Threading;
 
 namespace Kitchen
 {
@@ -11,7 +13,12 @@ namespace Kitchen
         public readonly string Name;
         public readonly string CatchPhrase;
 
+
+        private Thread _thread;
+        
         private CooksThread[] _cooksThreads;
+
+        private Stopwatch _stopwatch;
         
         public Cook(string name, string catchPhrase, int rank, int proficiency)
         {
@@ -21,17 +28,46 @@ namespace Kitchen
             CatchPhrase = catchPhrase;
 
             SetupCookThreads();
+            
+            _stopwatch = new Stopwatch();
 
+            _thread = new Thread(Update);
+        }
+
+        public void Start()
+        {
             foreach (var cooksThread in _cooksThreads)
             {
-                cooksThread.Run();
+                cooksThread.Start();
+            }
+            
+            _stopwatch.Start();
+            _thread.Start();
+
+        }
+
+        public void Update()
+        {
+            while (true)
+            {
+                Thread.Sleep(1); //todo add from config
+                _stopwatch.Stop();
+                Console.WriteLine(_stopwatch.ElapsedMilliseconds);
+                
+                foreach (var cooksThread in _cooksThreads)
+                {
+                    cooksThread.Update(_stopwatch.ElapsedMilliseconds);
+                }
+                _stopwatch.Restart();
+                
             }
         }
 
-        public void Run()
+        public (DistributionData, long) GetOrder()
         {
             
-        }
+            return (new DistributionData(), -1);
+        } 
 
 
         private void SetupCookThreads()
@@ -39,7 +75,7 @@ namespace Kitchen
             List<CooksThread> cooksThreadsTemp = new List<CooksThread>();
             foreach (var _ in Enumerable.Range(0, _proficiency))
             {
-                cooksThreadsTemp.Add(new CooksThread());
+                cooksThreadsTemp.Add(new CooksThread(this));
             }
 
             _cooksThreads = cooksThreadsTemp.ToArray();
