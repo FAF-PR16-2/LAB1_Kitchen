@@ -193,31 +193,24 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\Odinlevi\\.nuget\\packages\\": {},
-    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
+    "/Users/maximnichiforov/.nuget/packages/": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\University\\Semester5\\PR\\LAB1_Kitchen\\Kitchen\\Kitchen.csproj",
+      "projectUniqueName": "/Users/maximnichiforov/RiderProjects/LAB1_Kitchen/Kitchen/Kitchen.csproj",
       "projectName": "Kitchen",
-      "projectPath": "C:\\University\\Semester5\\PR\\LAB1_Kitchen\\Kitchen\\Kitchen.csproj",
-      "packagesPath": "C:\\Users\\Odinlevi\\.nuget\\packages\\",
-      "outputPath": "C:\\University\\Semester5\\PR\\LAB1_Kitchen\\Kitchen\\obj\\",
+      "projectPath": "/Users/maximnichiforov/RiderProjects/LAB1_Kitchen/Kitchen/Kitchen.csproj",
+      "packagesPath": "/Users/maximnichiforov/.nuget/packages/",
+      "outputPath": "/Users/maximnichiforov/RiderProjects/LAB1_Kitchen/Kitchen/obj/",
       "projectStyle": "PackageReference",
-      "fallbackFolders": [
-        "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
-      ],
       "configFilePaths": [
-        "C:\\Users\\Odinlevi\\AppData\\Roaming\\NuGet\\NuGet.Config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        "/Users/maximnichiforov/.nuget/NuGet/NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net5.0"
       ],
       "sources": {
-        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
@@ -259,7 +252,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.400\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "/Users/maximnichiforov/.dotnet/sdk/5.0.301/RuntimeIdentifierGraph.json"
       }
     }
   }

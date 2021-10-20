@@ -44,7 +44,7 @@ namespace Kitchen
                 items = orderData.items,
                 priority = orderData.priority,
                 max_wait = orderData.max_wait,
-                pick_up_time = orderData.max_wait,
+                pick_up_time = orderData.pick_up_time,
                 cooking_details = new Dictionary<string, int>[orderData.items.Length]
             });
 

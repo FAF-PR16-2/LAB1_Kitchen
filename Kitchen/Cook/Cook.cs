@@ -85,8 +85,17 @@ namespace Kitchen
             bool skippedOven = false;
             bool skippedStove = false;
 
+
+
             foreach (var item in itemFromOrderDatas)
             {
+                if (item == null)
+                {
+                    Console.WriteLine("item was extracted");
+                    continue;
+                }
+                
+
                 if (item.complexity <= _rank)
                 {
                     var itemData = ItemsBuilder.GetItemDataByItemId(item.item_id).cooking_apparatus; 
