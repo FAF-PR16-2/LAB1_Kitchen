@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using Kitchen.Singleton;
@@ -18,6 +19,9 @@ namespace Kitchen
 
         private Mutex _mutexForRemoving;
         private Mutex _mutexForFinishing;
+        private Mutex _mutexForReceiving;
+
+        private Semaphore _semaphore;
 
         public KitchenManager()
         {
@@ -30,13 +34,19 @@ namespace Kitchen
 
             _mutexForRemoving = new Mutex();
             _mutexForFinishing = new Mutex();
+            _mutexForReceiving = new Mutex();
+
+            _semaphore = new Semaphore(Configuration.MaxOrdersAtTheTime, Configuration.MaxOrdersAtTheTime);
 
             //KitchenSetup should be setuped before start in main function
         }
 
         public void ReceiveOrder(OrderData orderData)
         {
-            _distributionDatas.Add(new DistributionData()
+            _mutexForReceiving.WaitOne();
+            _semaphore.WaitOne();
+            
+            _distributionDatas.Add(new DistributionData
             {
                 order_id = orderData.order_id,
                 table_id = orderData.table_id,
@@ -48,6 +58,8 @@ namespace Kitchen
                 cooking_details = new Dictionary<string, int>[orderData.items.Length]
             });
 
+            Console.WriteLine(_distributionDatas.Count);
+            
             foreach (var item in orderData.items)
             {
                 _rawListItemsToPrepare.Add(new ItemFromOrderData
@@ -61,7 +73,9 @@ namespace Kitchen
                 });
             }
 
+            
             SortRawList();
+            _mutexForReceiving.ReleaseMutex();
         }
 
         public List<ItemFromOrderData> GetListOfItemsFromOrderData()
@@ -113,6 +127,7 @@ namespace Kitchen
                     
                     _distributionDatas.Remove(distributionData);
                     SendRequestWithFinishedOrder(distributionData);
+                    _semaphore.Release();
                     _mutexForFinishing.ReleaseMutex();
                     return;
                 }
@@ -126,7 +141,7 @@ namespace Kitchen
         {
             RequestsSender.SendOrderRequest(distributionData);
             Console.WriteLine("order with id = " + distributionData.order_id + " was sent");
-            // todo
+            
         }
 
         private void SortRawList()
