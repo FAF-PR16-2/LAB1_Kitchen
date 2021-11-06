@@ -61,7 +61,7 @@ namespace Kitchen
         {
             while (true)
             {
-                Thread.Sleep(Configuration.TimeUnit);
+                Thread.Sleep(1);
                 _stopwatch.Stop();
 
                 foreach (var cooksThread in _cooksThreads)
