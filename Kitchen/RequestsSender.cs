@@ -12,7 +12,7 @@ namespace Kitchen
             {
                 var dataString = JsonSerializer.Serialize(distributionData);
                 client.Headers.Add(HttpRequestHeader.ContentType, "application/json");
-                client.UploadString(new Uri("http://host.docker.internal:5001/distribution"), "POST", dataString);
+                client.UploadString(new Uri("http://host.docker.internal:80/distribution"), "POST", dataString);
             }
         }
     }

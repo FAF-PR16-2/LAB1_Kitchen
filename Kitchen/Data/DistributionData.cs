@@ -5,7 +5,7 @@ namespace Kitchen
 {
     public class DistributionData
     {
-        public int order_id { get; set; }
+        public Guid order_id { get; set; }
         public int table_id { get; set; }
         public int waiter_id { get; set; }
         public int[] items { get; set; }

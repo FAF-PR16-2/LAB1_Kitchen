@@ -29,11 +29,16 @@ namespace Kitchen
             {
                 stoves.Add(new Stove());
             }
+            
+            cooks.Add(new Cook(0, "cook1", "phrase1", 3, 4));
+            cooks.Add(new Cook(1, "cook2", "phrase2", 3, 3));
+            cooks.Add(new Cook(2, "cook3", "phrase3", 2, 2));
+            cooks.Add(new Cook(3, "cook4", "phrase4", 1, 1));
 
-            foreach (var id in Enumerable.Range(0, Configuration.CooksCount).ToArray())
-            {
-                cooks.Add(new Cook(id, "cook"+id, "phrase"+id, 1+id, 1+id));
-            }
+            // foreach (var id in Enumerable.Range(0, Configuration.CooksCount).ToArray())
+            // {
+            //     cooks.Add(new Cook(id, "cook"+id, "phrase"+id, 1+id, 1+id));
+            // }
 
             KitchenSetup kitchenSetup = new KitchenSetup();
             kitchenSetup.Ovens = ovens.ToArray();

@@ -9,6 +9,6 @@ RUN dotnet publish -c Release -o out
 
 FROM mcr.microsoft.com/dotnet/aspnet:5.0
 WORKDIR /app
-EXPOSE 6000
+EXPOSE 81
 COPY --from=build-env /app/out .
-ENTRYPOINT ["dotnet", "Kitchen.dll", "--urls=http://0.0.0.0:6000"]
+ENTRYPOINT ["dotnet", "Kitchen.dll", "--urls=http://0.0.0.0:81"]

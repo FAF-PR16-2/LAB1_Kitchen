@@ -21,8 +21,6 @@ namespace Kitchen
         private Mutex _mutexForFinishing;
         private Mutex _mutexForReceiving;
 
-        private Semaphore _semaphore;
-
         public KitchenManager()
         {
             _distributionDatas = new List<DistributionData>();
@@ -36,7 +34,7 @@ namespace Kitchen
             _mutexForFinishing = new Mutex();
             _mutexForReceiving = new Mutex();
 
-            _semaphore = new Semaphore(Configuration.MaxOrdersAtTheTime, Configuration.MaxOrdersAtTheTime);
+            
 
             //KitchenSetup should be setuped before start in main function
         }
@@ -44,8 +42,7 @@ namespace Kitchen
         public void ReceiveOrder(OrderData orderData)
         {
             _mutexForReceiving.WaitOne();
-            _semaphore.WaitOne();
-            
+
             _distributionDatas.Add(new DistributionData
             {
                 order_id = orderData.order_id,
@@ -127,7 +124,6 @@ namespace Kitchen
                     
                     _distributionDatas.Remove(distributionData);
                     SendRequestWithFinishedOrder(distributionData);
-                    _semaphore.Release();
                     _mutexForFinishing.ReleaseMutex();
                     return;
                 }

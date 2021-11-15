@@ -63,6 +63,8 @@ namespace Kitchen
                 
                 endpoints.MapPost("/order", async context =>
                 {
+                    Console.WriteLine("???");
+                    
                     if (!context.Request.HasJsonContentType())
                     {
                         context.Response.StatusCode = (int)HttpStatusCode.UnsupportedMediaType;

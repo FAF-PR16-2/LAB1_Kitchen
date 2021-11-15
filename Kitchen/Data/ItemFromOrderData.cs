@@ -1,8 +1,11 @@
-﻿namespace Kitchen
+﻿using System;
+
+namespace Kitchen
 {
     public class ItemFromOrderData
     {
-        public int order_id { get; set; }
+        
+        public Guid order_id { get; set; }
         public int item_id { get; set; }
         public int priority { get; set; }
         public long pick_up_time { get; set; }
